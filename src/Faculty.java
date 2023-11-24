@@ -15,39 +15,54 @@ public class Faculty {
     }
 
     public void addFacultyStudent(Student student){
-        if(students.contains(student)){
-            System.out.println("This Student in that faculty already exists");
-        } else {
-            students.add(student);
-            System.out.println("added " + student.getName() + " to " + name);
-            System.out.println();
-            student.setFaculty(this);
-        }
+            if(student.getFaculty() == null) {
+                students.add(student);
+                System.out.println("added " + student.getName() + " to " + name);
+                System.out.println();
+                student.setFaculty(this);
+            } else {
+                try{
+                    throw new Exception("Student is already in a faculty");
+                } catch(Exception e){
+                    throw new RuntimeException(e);
+                }
+            }
+
     }
     public void addFacultyLecturer(Lecturer lecturer){
-        if(lecturers.contains(lecturer)){
-            System.out.println("This Lecturer in that faculty already exists");
-        } else {
             lecturers.add(lecturer);
             System.out.println("added " + lecturer.getName()  + " to " + name);
             System.out.println();
             lecturer.setFaculty(this);
-        }
+
     }
     public void addFacultySubject(Subject subject){
-        if(subjects.contains(subject)) {
-            System.out.println("This Subject in that faculty already exists");
-        } else {
-            subjects.add(subject);
-            subject.setFaculty(this);
-        }
+            boolean containsValue = subjects.stream()
+                            .anyMatch(object  -> subject.getName().equals(object.getName()));
+            if(!containsValue) {
+                subjects.add(subject);
+                System.out.println("added " + subject.getName() + " to " + name);
+                subject.setFaculty(this);
+            } else {
+                try{
+                    throw new Exception("Subject in that faculty already exists");
+                } catch(Exception e){
+                    throw new RuntimeException(e);
+                }
+            }
+
     }
     public void setFacultySubjectLecturer(Subject subject, Lecturer lecturer){
-        if(subjects.contains(subject) && lecturers.contains(lecturer)){
+        if(subject.getLecturer() == null && lecturer.getSubject() == null) {
             subject.setLecturer(lecturer);
             lecturer.setSubject(subject);
-        } else {
-            System.out.println("that subject or lecturer does not exist in this faculty");
+        }
+        else {
+            try{
+                throw new Exception("subject is already assigned to a lecturer OR lecturer already has 1 subject");
+            } catch(Exception e){
+                throw new RuntimeException(e);
+            }
         }
     }
 
